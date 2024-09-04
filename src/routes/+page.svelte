@@ -5,9 +5,18 @@
 </style>
 
 <script lang="ts">
+	import { onMount } from "svelte";
+	import { register } from "@tauri-apps/plugin-deep-link";
+
 	let email: string = "";
 	let password: string = "";
 	let errorMessage: string = "";
+
+	onMount(async () => {
+		await register("keysync").then(() => {
+			console.log("Registered deep link");
+		});
+	});
 
 	function handleLogin(): void {
 		if (email === "" || password === "") {
@@ -27,15 +36,6 @@
 		}
 	}
 
-	async function handleGoogleLogin(): Promise<void> {
-		try {
-			// invoke the Google OAuth flow
-			console.log("Logging in with Google...");
-		} catch (error) {
-			console.error("Error logging in with Google:", error);
-		}
-	}
-
 	async function handleDiscordLogin(): Promise<void> {
 		try {
 			// invoke the Discord OAuth flow
@@ -44,9 +44,18 @@
 			console.error("Error logging in with Discord:", error);
 		}
 	}
+
+	async function handleGoogleLogin(): Promise<void> {
+		try {
+			// invoke the Google OAuth flow
+			console.log("Logging in with Google...");
+		} catch (error) {
+			console.error("Error logging in with Google:", error);
+		}
+	}
 </script>
 
-<div class="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 overflow-hidden">
+<div class="flex h-screen items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-900">
 	<div class="w-full max-w-md rounded-lg bg-white p-8 shadow-md dark:bg-gray-800">
 		<h1 class="mb-6 text-center text-2xl font-semibold text-gray-900 dark:text-gray-100">KeySync Login</h1>
 

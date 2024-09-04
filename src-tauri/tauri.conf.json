@@ -38,5 +38,13 @@
       "icons/icon.ico"
     ]
   },
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json"
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "plugins": {
+	"deep-link": {
+		"mobile": [],
+		"desktop": {
+			"schemes": ["keysync"]
+		}
+	}
+  }
 }
