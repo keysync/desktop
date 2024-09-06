@@ -22,6 +22,13 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.0.0-rc.8", features = [] }
 tauri-plugin-deep-link = "2.0.0-rc"
+reqwest = { version = "0.12.7", features = ["json"] }
+tokio = { version = "1.40.0", features = ["full"] }
+tauri-plugin-shell = "2.0.0-rc"
+oauth2 = "4.4.2"
+dirs = "5.0.1"
+chrono = "0.4.38"
+anyhow = "1.0.86"
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-single-instance = "2.0.0-beta.0"

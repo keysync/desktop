@@ -1,22 +1,7 @@
-<style lang="postcss">
-	::-ms-reveal {
-		display: none;
-	}
-</style>
-
 <script lang="ts">
-	import { onMount } from "svelte";
-	import { register } from "@tauri-apps/plugin-deep-link";
-
 	let email: string = "";
 	let password: string = "";
 	let errorMessage: string = "";
-
-	onMount(async () => {
-		await register("keysync").then(() => {
-			console.log("Registered deep link");
-		});
-	});
 
 	function handleLogin(): void {
 		if (email === "" || password === "") {
@@ -122,3 +107,9 @@
 		</p>
 	</div>
 </div>
+
+<style lang="postcss">
+	::-ms-reveal {
+		display: none;
+	}
+</style>

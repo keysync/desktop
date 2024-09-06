@@ -1,3 +1,4 @@
-pub mod github;
 pub mod discord;
+pub mod github;
 pub mod google;
+pub mod utils;

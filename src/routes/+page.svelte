@@ -1,22 +1,9 @@
-<style lang="postcss">
-	::-ms-reveal {
-		display: none;
-	}
-</style>
-
 <script lang="ts">
-	import { onMount } from "svelte";
-	import { register } from "@tauri-apps/plugin-deep-link";
+	import { invoke } from "@tauri-apps/api/core";
 
 	let email: string = "";
 	let password: string = "";
 	let errorMessage: string = "";
-
-	onMount(async () => {
-		await register("keysync").then(() => {
-			console.log("Registered deep link");
-		});
-	});
 
 	function handleLogin(): void {
 		if (email === "" || password === "") {
@@ -30,7 +17,9 @@
 	async function handleGitHubLogin(): Promise<void> {
 		try {
 			// invoke the GitHub OAuth flow
-			console.log("Logging in with GitHub...");
+			await invoke("github_login").then(() => {
+				console.log("Logging in with GitHub...");
+			});
 		} catch (error) {
 			console.error("Error logging in with GitHub:", error);
 		}
@@ -122,3 +111,9 @@
 		</p>
 	</div>
 </div>
+
+<style lang="postcss">
+	::-ms-reveal {
+		display: none;
+	}
+</style>

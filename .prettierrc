@@ -13,7 +13,7 @@
 	"endOfLine": "lf",
 	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
-	"svelteSortOrder": "options-styles-scripts-markup",
+	"svelteSortOrder": "options-scripts-markup-styles",
 	"svelteStrictMode": true,
 	"svelteAllowShorthand": false,
 	"svelteIndentScriptAndStyle": true,

@@ -1,6 +1,5 @@
-use std::error::Error;
+use anyhow::{Error, Result};
 
-pub async fn initiate_discord_oauth() -> Result<(), Box<dyn Error>> {
-
-	Ok(())
+pub async fn initiate_discord_oauth() -> Result<(), Error> {
+    Ok(())
 }
