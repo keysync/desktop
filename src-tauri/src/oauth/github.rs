@@ -189,6 +189,8 @@ pub async fn get_github_user_info() -> Result<GitHubUserProfile, Error> {
         profile.email = Some(email);
     }
 
+	config.user_profiles.retain(|p| p.provider != "github");
+
     config.user_profiles.push(UserProfile {
         provider: "github".to_string(),
         email: profile.email.clone().unwrap(),
