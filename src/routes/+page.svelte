@@ -1,9 +1,27 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
+	import type { GitHubUserProfile } from "$lib/types";
 	import { invoke } from "@tauri-apps/api/core";
-
+	import { listen } from "@tauri-apps/api/event";
+	import { onMount } from "svelte";
 	let email: string = "";
 	let password: string = "";
 	let errorMessage: string = "";
+
+	onMount(() => {
+		listen("github_login", async (event) => {
+			console.log("Event received:", event.payload);
+			console.log("GitHub login successful!");
+			await invoke<GitHubUserProfile>("get_github_user_info").then((response) => {
+				console.log("GitHub user info:", response);
+				goto(`
+					/confirm/github?username=${response.login}
+					&email=${response.email}
+					&avatar_url=${response.avatar_url}
+				`);
+			});
+		});
+	});
 
 	function handleLogin(): void {
 		if (email === "" || password === "") {
@@ -17,7 +35,7 @@
 	async function handleGitHubLogin(): Promise<void> {
 		try {
 			// invoke the GitHub OAuth flow
-			await invoke("github_login").then(() => {
+			await invoke("github_login").then(async () => {
 				console.log("Logging in with GitHub...");
 			});
 		} catch (error) {

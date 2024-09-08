@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub accounts: Accounts,
     pub user: Option<UserCredentials>,
+	pub user_profiles: Vec<UserProfile>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
@@ -32,6 +33,15 @@ pub struct ProviderConfig {
 pub struct UserCredentials {
     pub email: String,
     pub password: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Default, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct UserProfile {
+	pub provider: String,
+	pub email: String,
+	pub name: String,
+	pub avatar_url: String,
 }
 
 fn get_config_path() -> Result<PathBuf, Error> {

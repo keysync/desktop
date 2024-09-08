@@ -11,6 +11,9 @@
     "core:window:allow-close",
     "core:window:allow-start-dragging",
     "deep-link:allow-register",
-    "shell:default"
+    "shell:default",
+	"core:event:allow-listen",
+	"core:event:allow-emit",
+	"core:event:allow-unlisten"
   ]
 }

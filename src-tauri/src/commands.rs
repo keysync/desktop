@@ -3,7 +3,7 @@ use tauri::{command, ipc::InvokeError, AppHandle};
 
 use crate::{
     config::{self, Config},
-    oauth::{discord, github, google},
+    oauth::{discord, github::{self, GitHubUserProfile}, google},
 };
 
 #[command]
@@ -21,6 +21,13 @@ pub async fn github_login(handle: AppHandle) -> Result<(), InvokeError> {
     github::initiate_github_oauth(&handle)
         .await
         .map_err(|e| InvokeError::from_anyhow(e))
+}
+
+#[command]
+pub async fn get_github_user_info() -> Result<GitHubUserProfile, InvokeError> {
+	github::get_github_user_info()
+		.await
+		.map_err(|e| InvokeError::from_anyhow(e))
 }
 
 #[command]

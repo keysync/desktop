@@ -29,6 +29,8 @@ oauth2 = "4.4.2"
 dirs = "5.0.1"
 chrono = "0.4.38"
 anyhow = "1.0.86"
+dotenvy = "0.15.7"
+dotenvy_macro = "0.15.7"
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-single-instance = "2.0.0-beta.0"
