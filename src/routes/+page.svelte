@@ -15,7 +15,7 @@
 			await invoke<GitHubUserProfile>("get_github_user_info").then((response) => {
 				console.log("GitHub user info:", response);
 				goto(`
-					/confirm/github?username=${response.login}
+					/confirm/GitHub?username=${response.login}
 					&email=${response.email}
 					&avatar_url=${response.avatar_url}
 				`);
