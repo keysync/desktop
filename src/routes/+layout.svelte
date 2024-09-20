@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Titlebar from "$lib/Titlebar.svelte";
+	import Titlebar from "$lib/components/Titlebar.svelte";
 	import "../app.css";
 
 	document.addEventListener("contextmenu", (event) => {

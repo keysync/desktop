@@ -1,11 +1,5 @@
-use std::{
-    collections::HashMap,
-    fs::{self, File},
-    io::Write,
-};
+use std::collections::HashMap;
 
-use config::Config;
-use dirs::home_dir;
 use oauth::{github, utils::extract_provider_and_code};
 use serde::{Deserialize, Serialize};
 use tauri::{async_runtime, Manager, WebviewWindow};
@@ -14,6 +8,7 @@ use tauri_plugin_deep_link::DeepLinkExt;
 mod commands;
 mod config;
 mod oauth;
+mod utils;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Payload<'a> {
@@ -63,42 +58,23 @@ pub fn run() {
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
 
-            if cfg!(debug_assertions) {
+            #[cfg(debug_assertions)]
+            {
                 window.open_devtools();
                 app.deep_link()
                     .register("keysync")
                     .expect("Failed to register deep link");
             }
 
-            let folder_name = if cfg!(debug_assertions) {
-                ".keysync-dev"
-            } else {
-                ".keysync"
-            };
+            let is_first_launch = utils::create_config_file_if_not_exists();
 
-            if let Some(home_path) = home_dir() {
-                let folder_path = home_path.join(folder_name);
-                if !folder_path.exists() {
-                    println!("Directory does not exist, creating it");
-                    fs::create_dir(&folder_path).expect("Failed to create directory");
-                }
-
-                let config_path = folder_path.join("config.json");
-                if !config_path.exists() {
-                    println!("Config file does not exist, creating it");
-                    let default_config = Config {
-                        ..Default::default()
-                    };
-                    let config_json = serde_json::to_string_pretty(&default_config)
-                        .expect("Failed to serialize default config");
-                    let mut file =
-                        File::create(&config_path).expect("Failed to create config file");
-                    file.write_all(config_json.as_bytes())
-                        .expect("Failed to write to config file");
-                }
+            if is_first_launch {
+                println!("First launch detected, opening login page");
+                window.eval("window.location.replace(\"/login\");").unwrap();
             } else {
-                eprintln!("Failed to get home directory");
+                println!("Not the first launch, proceeding to app"); // Todo: instead of first launch it should be whether the user is logged in or not
             }
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

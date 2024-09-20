@@ -73,8 +73,7 @@ pub async fn exchange_code_for_token(handle: &AppHandle, code: String) -> Result
     let token_result = client
         .exchange_code(AuthorizationCode::new(code))
         .request_async(async_http_client)
-        .await
-        .unwrap();
+        .await?;
 
     println!("Token result: {:?}", &token_result);
 
@@ -175,7 +174,7 @@ pub async fn get_github_user_info() -> Result<GitHubUserProfile, Error> {
         .await?;
 
     if !response.status().is_success() {
-        return Err(anyhow::anyhow!(
+        return Err(anyhow!(
             "Failed to fetch user profile: {}",
             response.status()
         ));
@@ -216,7 +215,7 @@ async fn get_github_user_email(access_token: &str) -> Result<String, Error> {
         .await?;
 
     if !response.status().is_success() {
-        return Err(anyhow::anyhow!(
+        return Err(anyhow!(
             "Failed to fetch user email: {}",
             response.status()
         ));

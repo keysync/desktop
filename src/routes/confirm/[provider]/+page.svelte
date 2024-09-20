@@ -2,8 +2,13 @@
 	import type { PageData } from "./$types";
 	export let data: PageData;
 
-	function handleConfirm() {
-		console.log("Confirming GitHub information...");
+	function handleConfirm(): void {
+		console.log("Confirming GitHub information. Redirecting to app...");
+		// Proceed to app
+	}
+
+	function goBack(): void {
+		history.back();
 	}
 </script>
 
@@ -34,7 +39,19 @@
 		</button>
 
 		<p class="mt-6 text-center text-gray-600 dark:text-gray-400">
-			Not you? <a href="/" class="text-blue-500 hover:underline dark:text-blue-300">Try again</a>
+			Not you?
+			<button
+				on:click="{goBack}"
+				on:keydown="{(e) => {
+					if (['Enter', ''].includes(e.key)) {
+						e.preventDefault();
+						goBack();
+					}
+				}}"
+				tabindex="0"
+				class="text-blue-500 hover:underline dark:text-blue-300">
+				Try again
+			</button>
 		</p>
 	</div>
 </div>

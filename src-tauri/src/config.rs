@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub accounts: Accounts,
     pub user: Option<UserCredentials>,
-	pub user_profiles: Vec<UserProfile>,
+    pub user_profiles: Vec<UserProfile>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
@@ -38,10 +38,10 @@ pub struct UserCredentials {
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct UserProfile {
-	pub provider: String,
-	pub email: String,
-	pub name: String,
-	pub avatar_url: String,
+    pub provider: String,
+    pub email: String,
+    pub name: String,
+    pub avatar_url: String,
 }
 
 fn get_config_path() -> Result<PathBuf, Error> {
@@ -72,12 +72,16 @@ pub fn set_config(config: &Config) -> Result<Config, Error> {
 
     if let Some(parent) = config_path.parent() {
         if let Err(e) = fs::create_dir_all(parent) {
-            return Err(anyhow!("Failed to create config directory {:?}: {}", parent, e));
+            return Err(anyhow!(
+                "Failed to create config directory {:?}: {}",
+                parent,
+                e
+            ));
         }
     }
 
-	fs::write(&config_path, config_content)
-	.map_err(|e| anyhow!("Failed to write config file to {:?}: {}", config_path, e))?;
+    fs::write(&config_path, config_content)
+        .map_err(|e| anyhow!("Failed to write config file to {:?}: {}", config_path, e))?;
 
-	Ok(config.clone())
+    Ok(config.clone())
 }

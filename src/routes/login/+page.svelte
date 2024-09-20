@@ -1,16 +1,26 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
+	import type { GitHubUserProfile } from "$lib/types";
+	import { invoke } from "@tauri-apps/api/core";
+	import { listen } from "@tauri-apps/api/event";
+	import { onMount } from "svelte";
+
 	let email: string = "";
 	let password: string = "";
-	let confirmPassword: string = "";
-	let passwordMatch: boolean = true;
 
-	function passwordsMatch(): void {
-		if (password === "" || confirmPassword === "") {
-			passwordMatch = true;
-		} else {
-			passwordMatch = password === confirmPassword;
-		}
-	}
+	onMount(() => {
+		listen("github_login", async () => {
+			console.log("GitHub login successful!");
+			await invoke<GitHubUserProfile>("get_github_user_info").then((response) => {
+				console.log("GitHub user info:", response);
+				goto(`
+					/confirm/GitHub?username=${response.login}
+					&email=${response.email}
+					&avatar_url=${response.avatar_url}
+				`);
+			});
+		});
+	});
 
 	function handleLogin(): void {
 		console.log("Logging in with email:", email, "and password:", password);
@@ -19,7 +29,9 @@
 	async function handleGitHubLogin(): Promise<void> {
 		try {
 			// invoke the GitHub OAuth flow
-			console.log("Logging in with GitHub...");
+			await invoke("github_login").then(async () => {
+				console.log("Logging in with GitHub...");
+			});
 		} catch (error) {
 			console.error("Error logging in with GitHub:", error);
 		}
@@ -46,7 +58,7 @@
 
 <div class="flex h-screen items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-900">
 	<div class="w-full max-w-md rounded-lg bg-white p-8 shadow-md dark:bg-gray-800">
-		<h1 class="mb-6 text-center text-2xl font-semibold text-gray-900 dark:text-gray-100">KeySync Sign up</h1>
+		<h1 class="mb-6 text-center text-2xl font-semibold text-gray-900 dark:text-gray-100">KeySync Login</h1>
 
 		<form on:submit|preventDefault="{handleLogin}">
 			<div class="mb-4">
@@ -66,32 +78,16 @@
 					type="password"
 					id="password"
 					bind:value="{password}"
-					on:input="{passwordsMatch}"
 					class="mt-1 block h-8 w-full border-0 border-b-2 border-gray-300 bg-white px-2 text-gray-900 transition-colors duration-300 focus:border-gray-700 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-gray-400"
 					autocomplete="off"
 					required />
 			</div>
-
-			<div class="mb-6">
-				<label for="confirm-password" class="block text-gray-700 dark:text-gray-300">Confirm Password</label>
-				<input
-					type="password"
-					id="confirm-password"
-					bind:value="{confirmPassword}"
-					on:input="{passwordsMatch}"
-					class="mt-1 block h-8 w-full border-0 border-b-2 border-gray-300 bg-white px-2 text-gray-900 transition-colors duration-300 focus:border-gray-700 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-gray-400"
-					autocomplete="off"
-					required />
-			</div>
-
-			{#if !passwordMatch}
-				<p class="mb-4 text-sm text-red-500">Passwords do not match</p>
-			{/if}
 
 			<button
+				on:click="{handleLogin}"
 				type="submit"
 				class="w-full rounded bg-blue-500 px-4 py-2 font-bold text-white transition-transform duration-150 ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 active:scale-95">
-				Sign up
+				Log In
 			</button>
 		</form>
 
@@ -120,7 +116,7 @@
 		</div>
 
 		<p class="mt-4 text-center text-gray-600 dark:text-gray-400">
-			Already have an account? <a href="/login" class="text-blue-500 hover:underline dark:text-blue-300">Log in</a>
+			Don't have an account? <a href="/signup" class="text-blue-500 hover:underline dark:text-blue-300">Sign Up</a>
 		</p>
 	</div>
 </div>
